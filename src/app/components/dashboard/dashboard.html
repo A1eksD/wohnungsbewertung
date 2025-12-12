@@ -1,3 +1,34 @@
 <section>
 
+  <form class="search-form">
+    <table class="search-full-width" cellspacing="0">
+      <tr>
+        <td>
+          <mat-form-field class="search-full-width">
+            <mat-label>Stadt</mat-label>
+            <input matInput placeholder="Bsp. Berlin">
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field class="search-full-width">
+            <mat-label>Straße</mat-label>
+            <input matInput placeholder="Bsp. Berlin">
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field class="search-full-width-house-nr">
+            <mat-label>Hausnr.</mat-label>
+            <input matInput placeholder="Bsp. 1">
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field class="search-full-width-plz">
+            <mat-label>Plz.</mat-label>
+            <input matInput maxlength="5" placeholder="Bsp. 12345" value="">
+          </mat-form-field>
+        </td>
+      </tr>
+    </table>
+    <button matButton="elevated">Basic</button>
+  </form>
 </section>
