@@ -2,28 +2,18 @@
 
 section{
   width: 100vw;
-  height: calc(100dvh - 160px);
+  min-height: calc(100dvh - 160px);
   @include displayFlex($j: flex-start);
   flex-direction: column;
   background-color: cadetblue;
 
   form{
     @include displayFlex();
-  }
-
-  td {
-    padding-right: 8px;
+    margin-bottom: -76px;
+    z-index: 1000;
   }
 
   .search-full-width{
-    width: 160px;
-  }
-
-  .search-full-width-house-nr{
-    width: 80px;
-  }
-
-  .search-full-width-plz{
-    width: 100px;
+    width: 200px;
   }
 }

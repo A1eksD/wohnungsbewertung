@@ -43,7 +43,13 @@ __screenshots__/
 Thumbs.db
 
 
+# Environment
 *env
+*env*
 *.env
 env
 .env
+environment*
+*environment*
+src/environments/environment.ts
+src/environments/environment.development.ts
