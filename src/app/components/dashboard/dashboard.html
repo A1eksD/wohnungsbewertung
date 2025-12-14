@@ -1,13 +1,19 @@
 <section>
 
   <form class="search-form">
-    <mat-form-field class="search-full-width" style="margin-bottom: 0">
-      <mat-label>Straße</mat-label>
-      <input matInput [(ngModel)]="address" name="address" (input)="onAddressChange($event.target.value)" (keyup.enter)="mapCmp.goToAddress(address)" [matAutocomplete]="auto">
+    <mat-form-field class="search-full-width">
+      <mat-label>Adresse</mat-label>
+      <input matInput ngModel="address" name="address"
+             (input)="onAddressChange($event.target.value)"
+             (keyup.enter)="mapCmp.goToAddress(address)"
+             [matAutocomplete]="auto"
+             placeholder="Straße, PLZ, Stadt">
       <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectSuggestion($event.option.value, mapCmp)">
-        <mat-option *ngFor="let s of suggestions" [value]="s.label">
-          {{ s.label }}
-        </mat-option>
+        @for (s of suggestions; track s.label) {
+          <mat-option [value]="s.label">
+            {{ s.label }}
+          </mat-option>
+        }
       </mat-autocomplete>
     </mat-form-field>
     <button type="button" matButton="elevated" (click)="mapCmp.goToAddress(address)">Suchen</button>

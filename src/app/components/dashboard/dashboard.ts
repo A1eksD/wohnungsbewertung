@@ -9,6 +9,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {Map} from './map/map';
 import {Reviews} from './reviews/reviews';
+import {Suggestions} from '../../interfaces/suggestions';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,7 +19,7 @@ import {Reviews} from './reviews/reviews';
 })
 export class Dashboard {
   address = '';
-  suggestions: Array<{ label: string; lat: number; lon: number }> = [];
+  suggestions: Array<Suggestions> = [];
   private searchTimer?: number;
 
   onAddressChange(q: string) {
@@ -59,4 +60,15 @@ export class Dashboard {
     this.address = label;
     mapCmp.goToAddress(label);
   }
+
+  normalize(street: string, plz: string, city: string) {
+    return `${street}_${plz}_${city}`
+      .toLowerCase()
+      .replace(/ß/g, 'ss')
+      .replace(/ä/g, 'ae')
+      .replace(/ö/g, 'oe')
+      .replace(/ü/g, 'ue')
+      .replace(/[^a-z0-9_]/g, '');
+  }
+
 }

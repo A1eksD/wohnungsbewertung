@@ -2,9 +2,7 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
 import { App } from './app/app';
 import {initializeApp} from 'firebase/app';
-import {getAnalytics} from 'firebase/analytics';
-import firebase from 'firebase/compat/app';
-import isSupported = firebase.analytics.isSupported;
+import {getAnalytics, isSupported} from 'firebase/analytics';
 import { environment } from './environments/environment';
 
 const firebaseConfig = {
