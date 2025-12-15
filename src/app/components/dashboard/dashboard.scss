@@ -3,14 +3,23 @@
 section{
   width: 100vw;
   min-height: calc(100dvh - 160px);
-  @include displayFlex($j: flex-start);
-  flex-direction: column;
+  @include displayFlex($j: center, $a: flex-start, $g: 56px);
   background-color: cadetblue;
 
+  .dashboardContent{
+    @include displayFlex($g: 8px);
+    flex-direction: column;
+  }
+
+  .reviewDiv{
+    min-width: 600px;
+    background-color: rgba(29, 2, 35, 0.15);
+    min-height: calc(100dvh - 160px);
+    overflow-y: auto;
+  }
+
   form{
-    @include displayFlex();
-    margin-bottom: -76px;
-    z-index: 1000;
+    @include displayFlex($g: 8px);
   }
 
   .search-full-width{
