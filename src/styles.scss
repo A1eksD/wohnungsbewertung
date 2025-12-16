@@ -6,6 +6,8 @@
 // custom components2 at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
 
+$background-color: #f6f7f8;
+
 html {
   @include mat.theme((
     color: (
