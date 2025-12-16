@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {MatInputModule} from '@angular/material/input';
@@ -10,15 +10,18 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {Map} from './map/map';
 import {Reviews} from './reviews/reviews';
 import {Suggestions} from '../../interfaces/suggestions';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [FormsModule, CommonModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatDividerModule, MatIconModule, MatAutocompleteModule, Map, Reviews],
+  standalone: true,
+  imports: [FormsModule, CommonModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatDividerModule, MatIconModule, MatAutocompleteModule, Map, Reviews, MatProgressBarModule],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.scss'],
 })
 export class Dashboard {
-  address = '';
+  public showLoadingSpinner: boolean = false;
+  address: string = '';
   suggestions: Array<Suggestions> = [];
   private searchTimer?: number;
 

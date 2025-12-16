@@ -1,5 +1,17 @@
+@use '../../../styles' as *;
+
 section{
   width: 100vw;
   height: 100px;
-  background-color: blue;
+  @include displayFlex();
+
+  .headerIconBox{
+    @include displayFlex($j: space-between);
+    min-width: 956px;
+    max-width: 1600px;
+  }
+
+  .userIcon{
+    cursor: pointer;
+  }
 }

@@ -3,9 +3,13 @@
 section{
   width: 100vw;
   min-height: calc(100dvh - 160px);
-  @include displayFlex($j: center, $a: flex-start, $g: 56px);
+  @include displayFlex($j: center, $a: center);
+  flex-direction: column;
   background-color: cadetblue;
 
+  .dashboardContentPosition{
+    @include displayFlex($j: center, $a: center, $g: 56px);
+  }
   .dashboardContent{
     @include displayFlex($g: 8px);
     flex-direction: column;

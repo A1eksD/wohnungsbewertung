@@ -1,33 +1,38 @@
 <section>
+  @if (showLoadingSpinner) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
 
-  <div class="dashboardContent">
-    <form class="search-form">
-      <mat-form-field class="search-full-width"
-                      subscriptSizing="dynamic">
-        <mat-label>Adresse</mat-label>
-        <input matInput ngModel="address" name="address"
-               (input)="onAddressChange($event.target.value)"
-               (keyup.enter)="mapCmp.goToAddress(address)"
-               [matAutocomplete]="auto"
-               placeholder="Straße, PLZ, Stadt">
-        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectSuggestion($event.option.value, mapCmp)">
-          @for (s of suggestions; track s.label) {
-            <mat-option [value]="s.label">
-              {{ s.label }}
-            </mat-option>
-          }
-        </mat-autocomplete>
-      </mat-form-field>
-      <button matFab extended type="button"
-              (click)="mapCmp.goToAddress(address)">
-        Suchen
-      </button>
-    </form>
+  <div class="dashboardContentPosition">
+    <div class="dashboardContent">
+      <form class="search-form">
+        <mat-form-field class="search-full-width"
+                        subscriptSizing="dynamic">
+          <mat-label>Adresse</mat-label>
+          <input matInput ngModel="address" name="address"
+                 (input)="onAddressChange($event.target.value)"
+                 (keyup.enter)="mapCmp.goToAddress(address)"
+                 [matAutocomplete]="auto"
+                 placeholder="Straße, PLZ, Stadt">
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectSuggestion($event.option.value, mapCmp)">
+            @for (s of suggestions; track s.label) {
+              <mat-option [value]="s.label">
+                {{ s.label }}
+              </mat-option>
+            }
+          </mat-autocomplete>
+        </mat-form-field>
+        <button matFab extended type="button"
+                (click)="mapCmp.goToAddress(address)">
+          Suche
+        </button>
+      </form>
 
-    <app-map #mapCmp></app-map>
-  </div>
+      <app-map #mapCmp></app-map>
+    </div>
 
-  <div class="reviewDiv">
-    <app-reviews></app-reviews>
+    <div class="reviewDiv">
+      <app-reviews></app-reviews>
+    </div>
   </div>
 </section>
