@@ -1,0 +1,23 @@
+@use '../../../../styles' as *;
+
+form {
+  @include displayFlex($j: center, $a: center);
+  flex-direction: column;
+  margin: 12px 12px 2px 12px;
+}
+
+.hide-password-button {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  margin-left: -40px;
+  position: relative;
+  z-index: 1;
+}
+
+p {
+  font-size: x-large;
+}

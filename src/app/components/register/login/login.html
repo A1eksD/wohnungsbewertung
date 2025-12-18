@@ -1,4 +1,57 @@
-<section>
-aaa
+<form class="example-form">
 
-</section>
+  <!-- Email -->
+  <mat-form-field class="example-full-width">
+    <mat-label>Email</mat-label>
+    <input
+      type="email"
+      matInput
+      [formControl]="emailFormControl"
+      placeholder="Ex. pat@example.com">
+
+    @if(emailFormControl.hasError('email') &&
+    !emailFormControl.hasError('required')) {
+      <mat-error>Please enter a valid email address</mat-error>
+    }
+    @if(emailFormControl.hasError('required')) {
+      <mat-error>Email is <strong>required</strong></mat-error>
+    }
+  </mat-form-field>
+
+  <!-- Passwort -->
+  <div>
+    <mat-form-field class="example-full-width">
+      <mat-label>Password</mat-label>
+      <input
+        [type]="hidePassword ? 'password' : 'text'"
+        type="password"
+        matInput
+        [formControl]="passwordFormControl"
+        placeholder="Mind. 8 Zeichen">
+
+      @if (passwordFormControl.hasError('required')) {
+        <mat-error>Password is <strong>required</strong></mat-error>
+      }
+      @if (passwordFormControl.hasError('minlength')) {
+        <mat-error>Password must be at least 8 characters long</mat-error>
+      }
+    </mat-form-field>
+    <button
+      mat-icon-button
+      matSuffix
+      type="button"
+      class="hide-password-button"
+      (click)="hidePassword = !hidePassword"
+      aria-label="Passwort anzeigen/verbergen">
+
+      @if(hidePassword) {
+        <p>😎</p>
+      } @else {
+        <p>🫣</p>
+      }
+    </button>
+  </div>
+
+  <button matButton="outlined">Einloggen</button>
+
+</form>

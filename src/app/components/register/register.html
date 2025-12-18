@@ -1,10 +1,23 @@
 <section>
 
   <mat-tab-group>
-    <mat-tab label="First">
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <img src="assets/icons/signIn.svg"
+          alt="Login"
+          class="tab-icon">
+      </ng-template>
+
       <app-login></app-login>
     </mat-tab>
-    <mat-tab label="Second">
+
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <img src="assets/icons/register.svg"
+          alt="Register"
+          class="tab-icon">
+      </ng-template>
+
       <app-register-user></app-register-user>
     </mat-tab>
   </mat-tab-group>

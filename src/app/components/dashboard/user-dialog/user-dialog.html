@@ -1,0 +1,25 @@
+
+@if (!userService.isUserLoggedIn) {
+   <app-is-user-logged-in></app-is-user-logged-in>
+}@else {
+  <h2 mat-dialog-title class="dialog-title">
+    Titel
+
+    <button
+      mat-icon-button
+      mat-dialog-close
+      aria-label="Schließen"
+      class="close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </h2>
+
+  <mat-dialog-content>
+    Inhalt …
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Abbrechen</button>
+  </mat-dialog-actions>
+
+}

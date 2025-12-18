@@ -1,0 +1,11 @@
+@use '../../../../styles' as *;
+
+mat-card-header {
+  @include displayFlex($j: center, $a: center, $g: 12px);
+  flex-direction: column;
+  margin-bottom: 8px;
+}
+
+mat-mdc-card-actions {
+  @include displayFlex($j: flex-end !important);
+}
