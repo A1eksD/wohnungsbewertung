@@ -9,3 +9,7 @@ mat-card-header {
 mat-mdc-card-actions {
   @include displayFlex($j: flex-end !important);
 }
+
+mat-card-content {
+  min-width: 480px;
+}

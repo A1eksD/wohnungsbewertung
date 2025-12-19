@@ -1,1 +1,123 @@
-<p>register-user works!</p>
+<form class="example-form">
+
+  <!-- Email -->
+  <mat-form-field class="width320">
+    <mat-label>Email</mat-label>
+    <input
+      type="email"
+      matInput
+      [formControl]="emailFormControl"
+      placeholder="Ex. pat@example.com">
+
+    @if(emailFormControl.hasError('email') &&
+    !emailFormControl.hasError('required')) {
+      <mat-error>Please enter a valid email address</mat-error>
+    }
+    @if(emailFormControl.hasError('required')) {
+      <mat-error>Email ist <strong>required</strong></mat-error>
+    }
+  </mat-form-field>
+
+  <!-- Name -->
+  <div class="nameBox">
+    <mat-form-field style="width: 240px;">
+      <mat-label>Name</mat-label>
+      <input
+        type="text"
+        matInput
+        [formControl]="nameFormControl"
+        placeholder="Mind. 4 Zeichen">
+
+      @if(nameFormControl.hasError('text') &&
+      !nameFormControl.hasError('required')) {
+        <mat-error>Name ist vergeben, biste such einen anderen aus.</mat-error>
+      }
+      @if(emailFormControl.hasError('required')) {
+        <mat-error>Name ist <strong>required</strong></mat-error>
+      }
+    </mat-form-field>
+
+    <button
+      mat-icon-button
+      matButton="outlined"
+      type="button"
+      (click)="generateName()"
+      style="padding: 8px;"
+      matTooltip="Generiere einen zufälligen Namen"
+      matTooltipPosition="above"
+      aria-label="Passwort anzeigen/verbergen">
+      Generate
+    </button>
+  </div>
+
+  <!-- Passwort -->
+  <div>
+    <mat-form-field class="width320">
+      <mat-label>Password</mat-label>
+      <input
+        [type]="hidePassword ? 'password' : 'text'"
+        type="password"
+        matInput
+        [formControl]="passwordFormControl"
+        placeholder="Mind. 8 Zeichen">
+
+      @if (passwordFormControl.hasError('required')) {
+        <mat-error>Password ist <strong>required</strong></mat-error>
+      }
+      @if (passwordFormControl.hasError('minlength')) {
+        <mat-error>Password must be at least 8 characters long</mat-error>
+      }
+    </mat-form-field>
+    <button
+      mat-icon-button
+      matSuffix
+      type="button"
+      class="hide-password-button"
+      (click)="hidePassword = !hidePassword"
+      aria-label="Passwort anzeigen/verbergen">
+
+      @if(hidePassword) {
+        <p>😎</p>
+      } @else {
+        <p>🫣</p>
+      }
+    </button>
+  </div>
+
+  <!--pw 2 -->
+  <div>
+    <mat-form-field class="width320">
+      <mat-label>Password wiederholen</mat-label>
+      <input
+        [type]="hidePassword2 ? 'password' : 'text'"
+        type="password"
+        matInput
+        [formControl]="passwordFormControl2"
+        placeholder="Mind. 8 Zeichen">
+
+      @if (passwordFormControl2.hasError('required')) {
+        <mat-error>Password ist <strong>required</strong></mat-error>
+      }
+      @if (passwordFormControl2.hasError('minlength')) {
+        <mat-error>Password must be at least 8 characters long</mat-error>
+      }
+    </mat-form-field>
+    <button
+      mat-icon-button
+      matSuffix
+      type="button"
+      class="hide-password-button"
+      (click)="hidePassword2 = !hidePassword2"
+      aria-label="Passwort anzeigen/verbergen">
+
+      @if(hidePassword2) {
+        <p>😎</p>
+      } @else {
+        <p>🫣</p>
+      }
+    </button>
+  </div>
+
+  <button matButton="outlined">Regestrieren</button>
+
+</form>
