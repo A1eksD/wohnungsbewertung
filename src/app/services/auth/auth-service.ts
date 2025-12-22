@@ -1,54 +1,54 @@
-import {inject, Injectable} from '@angular/core';
-import {Router} from '@angular/router';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,signOut, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import {distinctUntilChanged, fromEvent, tap} from 'rxjs';
-import firebase from 'firebase/compat/app';
-import Firestore = firebase.firestore.Firestore;
-import {RegisterUser} from '../../components/register/register-user/register-user';
-import { doc, setDoc, addDoc, collection } from "firebase/firestore";
-import {AppUser} from '../../interfaces/user';
+import { inject, Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { fromEvent, merge, tap, throttleTime} from 'rxjs';
+import { doc, updateDoc, setDoc } from 'firebase/firestore';
+import { AppUser} from '../../interfaces/user';
+import { RegisterDTO } from '../../interfaces/register-dto';
+import { Auth } from '@angular/fire/auth';
+import { Firestore } from '@angular/fire/firestore';
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
 
-  firestore: Firestore = inject(Firestore);
   lastActivityTimestamp: number = 0;
   autoLogoutTimer: number | null = null;
-  currentUserUid: string = '';
-  loginBoolean: boolean = false;
-  email: string = '';
-  samePw: boolean = false;
+  currentUserUid: string | undefined  = '';
+  errorMessage: string = '';
+  currentUser: string = '';
+  auth = inject(Auth);
+  firestore = inject(Firestore);
 
-
-  constructor(private route: Router, private regUser: RegisterUser) {
+  constructor(private route: Router) {
     this.startAutoLogoutTimer();
   }
 
   startAutoLogoutTimer() {
-    const timeout = 20 * 60 * 1000; // 20 minutes in milliseconds
+    const timeout = 20 * 60 * 1000;
 
-    // Create an observable to track user activity
-    const userActivityObservable = fromEvent(document, 'mousemove')
-      .pipe(
-        distinctUntilChanged(), // Ignore consecutive mousemove events
-        tap(() => {
-          this.lastActivityTimestamp = Date.now(); // Update timestamp on activity
-        })
-      );
+    const activity$ = merge(
+        fromEvent(document, 'mousemove'),
+        fromEvent(document, 'keydown'),
+        fromEvent(document, 'click'),
+        fromEvent(document, 'touchstart'),
+        fromEvent(document, 'scroll'),
+      ).pipe(
+      throttleTime(1000),
+      tap(() => this.lastActivityTimestamp = Date.now())
+    );
 
-    // Subscribe to the observable and update the timer accordingly
-    userActivityObservable.subscribe(() => {
-      if (this.autoLogoutTimer) {
-        clearTimeout(this.autoLogoutTimer); // Clear existing timer
-      }
+    activity$.subscribe(() => {
+      if (this.autoLogoutTimer) clearTimeout(this.autoLogoutTimer);
 
-      this.autoLogoutTimer = setTimeout(() => {
+      this.autoLogoutTimer = window.setTimeout(() => {
         this.deleteUserIdInLocalStorage();
-      }, timeout) as unknown as number;
+      }, timeout);
     });
   }
+
 
   deleteUserIdInLocalStorage() {
     localStorage.removeItem('currentUser');
@@ -56,69 +56,82 @@ export class AuthService {
   }
 
   //--------------- register new user -------------------------------------------------
-  // TODO: check register logic
-  async register() {
-    if (this.loginBoolean) {
-      const auth = getAuth();
-      const password = this.checkPW();
-      if (!this.samePw) {
-        console.error('Passwords do not match');
-        return;
-      }
-      try {
-        const userCredential = await createUserWithEmailAndPassword(auth, this.email, password);
-        const user = userCredential.user;
-        console.log('###### user ######', user);
-        const userData: AppUser = {
-          uid: user.uid,
-          email: this.regUser.emailFormControl.value!,
-          userName: this.regUser.nameFormControl.value!
-        }
-        await this.createUserInFirestore(userData);
-        this.clearUserInputData();
-        window.location.reload();
-      } catch (error: any) {
-        console.error('Registration failed: error.code', error.code);
-        console.error('Registration failed: error.message', error.message);
-      }
+  async register(data: RegisterDTO): Promise<void> {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(this.auth, data.email, data.password);
+
+      const userData: AppUser = {
+        uid: userCredential.user.uid,
+        email: data.email,
+        userName: data.name
+      };
+
+      await this.createUserInFirestore(userData);
+      console.log('Registration successful!');
+      this.route.navigateByUrl('/');
+    } catch (error: any) {
+      console.error('Registration failed:', error.code);
+      this.errorMessage = error.code === 'auth/email-already-in-use'
+        ? 'Diese E-Mail ist bereits registriert.'
+        : 'Fehler bei der Registrierung.';
+      throw error;
     }
   }
 
-  getUserCollection() {
-    return collection(this.firestore as any, 'users');
+  async createUserInFirestore(userData: AppUser) {
+    if (!userData.uid) throw new Error("Keine UID vorhanden");
+    const userDocRef = doc(this.firestore, 'users', userData.uid);
+    await setDoc(userDocRef, userData);
+
+    this.currentUserUid = userData.uid;
+    localStorage.setItem('currentUser', userData.uid);
   }
 
-  async createUserInFirestore(userData: AppUser){
-    const docRef = await addDoc(this.getUserCollection(), userData);
-    this.currentUserUid = (docRef as any).id;
-    localStorage.setItem('currentUser', this.currentUserUid);
-    this.route.navigateByUrl('/mainPage');
-  }
+  //--------------- login -------------------------------------------------
+  // TODO: test login
+  async login(data: RegisterDTO) {
+    try {
+      const userCredential = await signInWithEmailAndPassword(this.auth, data.email, data.password);
+      const user = userCredential.user;
+      const userDocRef = doc(this.firestore, 'users', user.uid);
+      await updateDoc(userDocRef, { status: true });
+      this.currentUserUid = user.uid;
+      localStorage.setItem('currentUser', user.uid);
 
-  clearUserInputData() {
-    this.regUser.nameFormControl.reset();
-    this.regUser.emailFormControl.reset();
-    this.regUser.passwordFormControl.reset();
-    this.regUser.passwordFormControl2.reset();
-  }
+      this.startAutoLogoutTimer();
+      this.route.navigateByUrl('/');
 
-  checkPW(): string {
-    const pw1 = this.regUser.passwordFormControl.value;
-    const pw2 = this.regUser.passwordFormControl2.value;
-
-    if (!pw1 || !pw2) {
-      this.samePw = false;
-      return '';
+    } catch (error: any) {
+      this.switchCase(error.code);
     }
-
-    if (pw1 === pw2) {
-      this.samePw = true;
-      return pw1;
-    }
-
-    this.samePw = false;
-    return '';
   }
 
+  async updateUserOnlineStatus(userId: string) {
+    const userDocRef = doc(this.firestore, 'users', userId);
+    await updateDoc(userDocRef, { status: true });
+  }
 
+  async getUserIdInLocalStorage(userId: string) {
+    const currentUserFromStorage = localStorage.getItem('currentUser');
+    if (!currentUserFromStorage) {
+      localStorage.setItem('currentUser', userId);
+      await this.updateUserOnlineStatus(userId);
+    }
+  }
+
+  switchCase(errorCode: string) {
+    switch (errorCode) {
+      case 'auth/invalid-credential':
+        this.errorMessage =
+          '*Invalid credentials. Please check your entries.';
+        break;
+      case 'auth/too-many-requests':
+        this.errorMessage =
+          '*Access to this account has been temporarily disabled due to numerous failed login attempts.';
+        break;
+      default:
+        this.errorMessage = '*Please check your entries.';
+        break;
+    }
+  }
 }

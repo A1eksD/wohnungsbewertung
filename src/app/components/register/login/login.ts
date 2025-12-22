@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
-import {FormControl, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatButton} from '@angular/material/button';
+import {AuthService} from '../../../services/auth/auth-service';
+
 
 @Component({
   selector: 'app-login',
@@ -12,7 +14,15 @@ import {MatButton} from '@angular/material/button';
 })
 export class Login {
 
+  form!: FormGroup;
   hidePassword: boolean = true;
+
+  constructor(public authService: AuthService) {
+    this.form = new FormGroup({
+      email: this.emailFormControl,
+      password: this.passwordFormControl
+    });
+  }
 
   emailFormControl = new FormControl('', [
     Validators.required,

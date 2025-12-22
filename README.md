@@ -58,3 +58,26 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
 # wohnungsbewertung
+
+### Firebase (optional)
+Install firebase tools with npm
+```bash
+ npm install -g firebase-tools
+```
+
+Login to firebase
+```bash
+ firebase login
+```
+
+Add firebase to your project
+```bash
+  ng add @angular/fire
+```
+for Angular v21+ 
+```bash
+  npm install @angular/fire firebase --save --legacy-peer-deps
+```
+
+Add firebase to your app.config.ts
+

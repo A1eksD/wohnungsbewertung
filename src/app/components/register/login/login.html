@@ -52,6 +52,9 @@
     </button>
   </div>
 
-  <button matButton="outlined">Einloggen</button>
+  <button matButton="outlined"
+    (click)="authService.login(form.value)"
+    [disabled]="form.invalid"
+  >Einloggen</button>
 
 </form>
